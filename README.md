@@ -1,5 +1,3 @@
-﻿============
-
 # Intro
 
 Sveiki! Tai yra Jūsų startinis projekto "template". 
