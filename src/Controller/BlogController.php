@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -32,19 +34,28 @@ class BlogController extends AbstractController
     ];
 
     /**
-     * @Route("/", name="blog_list")
+     * @Route("/{page}", name="blog_list", defaults={"page":5})
      */
-        public function list()
-    {
-        return new JsonResponse(self::POSTS);
-    }
+        public function list($page, Request $request)
+        {
+            $limit = $request->get('limit',10);
 
+            return $this->json(
+                [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'data' => array_map(function ($item) {
+                        return $this->generateURL('blog_by_slug',['slug' =>$item['slug']]);
+                        },self::POSTS)
+                ]
+            );
+        }
     /**
      * @Route("/{id}", name="blog_by_id", requirements={"id"="\d+"})
      */
     public function post($id)
     {
-        return new JsonResponse(
+        return $this->json(
             self::POSTS[array_search($id, array_column(self::POSTS,'id'))]
         );
     }
@@ -54,7 +65,7 @@ class BlogController extends AbstractController
      */
     public function postBySlug($slug)
     {
-        return new JsonResponse(
+        return $this->json(
             self::POSTS[array_search($slug, array_column(self::POSTS,'slug'))]
         );
     }
