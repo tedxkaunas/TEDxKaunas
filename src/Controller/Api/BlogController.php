@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\BlogPost;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -42,6 +42,7 @@ class BlogController extends AbstractController
     public function post($id)
     {
         return $this->json(
+            self:POSTS
             $repository = $this->getDoctrine()->getRepository(BlogPost::class)->find($id)
         );
     }
